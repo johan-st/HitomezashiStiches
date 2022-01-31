@@ -6,7 +6,6 @@ import (
 	"image/png"
 	"math/rand"
 	"os"
-	"time"
 )
 
 type seed []bool
@@ -14,11 +13,11 @@ type seed []bool
 func main() {
 	// seedH := seed{true, false, false}
 	// seedV := seed{true, true, false}
-	seedRand := time.Now().UnixNano()
-	seedH := randSeed(seedRand, 50, .5)
-	seedV := randSeed(seedRand, 50, .5)
-	// fmt.Printf("seed horizontal: %v\nseed vertical: %v\n", seedH, seedV)
-	img := makeImage(seedH, seedV, 50, 50)
+	// seedRand := time.Now().UnixNano()
+	seedRand := int64(10)
+	seedH := randSeed(seedRand, 3, .5)
+	seedV := randSeed(seedRand, 11, .75)
+	img := makeImage(seedH, seedV, 100, 100)
 
 	out, err := os.Create("stitch.png")
 	if err != nil {
