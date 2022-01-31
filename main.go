@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"image/png"
@@ -16,9 +15,9 @@ func main() {
 	// seedH := seed{true, false, false}
 	// seedV := seed{true, true, false}
 	seedRand := time.Now().UnixNano()
-	seedH := randSeed(seedRand, 4, 1)
-	seedV := randSeed(seedRand, 4, .5)
-	fmt.Printf("seed horizontal: %v\nseed vertical: %v\n", seedH, seedV)
+	seedH := randSeed(seedRand, 50, .5)
+	seedV := randSeed(seedRand, 50, .5)
+	// fmt.Printf("seed horizontal: %v\nseed vertical: %v\n", seedH, seedV)
 	img := makeImage(seedH, seedV, 50, 50)
 
 	out, err := os.Create("stitch.png")
