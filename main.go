@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"image/png"
@@ -11,12 +12,15 @@ import (
 type seed []bool
 
 func main() {
+	// seedH := seed{true, false, true, false, true, true, true, false, true, false, false, true, false, true, false, true, false, true, false, true, false, true, false, true}
+	// seedV := seed{true, false, true, false, true, false, true, true, false, true, false, true, false, false, false, true, false, true, false, true, false, true, false, true}
 	// seedH := seed{true, false, false}
-	// seedV := seed{true, true, false}
+	// seedV := seed{true, false, true, false, false}
 	// seedRand := time.Now().UnixNano()
 	seedRand := int64(10)
-	seedH := randSeed(seedRand, 3, .5)
-	seedV := randSeed(seedRand, 11, .75)
+	fmt.Println(seedRand)
+	seedH := randSeed(seedRand, 100, .1)
+	seedV := randSeed(seedRand, 100, .5)
 	img := makeImage(seedH, seedV, 100, 100)
 
 	out, err := os.Create("stitch.png")
@@ -64,12 +68,14 @@ func addRow(img *image.Alpha, stitchLen int, row int, rowSeed bool) {
 		for i := 0; i < img.Rect.Max.X; i++ {
 			if i/stitchLen%2 == 0 {
 				img.SetAlpha(i, row*5, color.Alpha{255})
+				img.SetAlpha(i+1, row*5, color.Alpha{255})
 			}
 		}
 	} else {
 		for i := 0; i < img.Rect.Max.X; i++ {
 			if i/stitchLen%2 == 1 {
 				img.SetAlpha(i, row*5, color.Alpha{255})
+				img.SetAlpha(i+1, row*5, color.Alpha{255})
 			}
 		}
 	}
@@ -81,12 +87,14 @@ func addCol(img *image.Alpha, stitchLen int, col int, colSeed bool) {
 		for i := 0; i < img.Rect.Max.Y; i++ {
 			if i/stitchLen%2 == 0 {
 				img.SetAlpha(col*5, i, color.Alpha{255})
+				img.SetAlpha(col*5, i+1, color.Alpha{255})
 			}
 		}
 	} else {
 		for i := 0; i < img.Rect.Max.Y; i++ {
 			if i/stitchLen%2 == 1 {
 				img.SetAlpha(col*5, i, color.Alpha{255})
+				img.SetAlpha(col*5, i+1, color.Alpha{255})
 			}
 		}
 	}
