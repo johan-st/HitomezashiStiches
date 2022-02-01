@@ -7,22 +7,47 @@ import (
 	"image/png"
 	"math/rand"
 	"os"
+	"strconv"
+	"time"
 )
 
 type seed []bool
 
 func main() {
+	stitchLength, err := strconv.Atoi(os.Args[1])
+	if err != nil {
+		panic(err)
+	}
+	width, err := strconv.Atoi(os.Args[2])
+	if err != nil {
+		panic(err)
+	}
+	height, err := strconv.Atoi(os.Args[3])
+	if err != nil {
+		panic(err)
+	}
+	seedRand := int64(0)
+	if len(os.Args) > 4 {
+		giveSeed, err := strconv.Atoi(os.Args[4])
+		if err != nil {
+			panic(err)
+		}
+		seedRand = int64(giveSeed)
+	}
+	if seedRand == 0 {
+		seedRand = time.Now().UnixNano()
+
+	}
+
+	fmt.Printf("using seed: %v\n", seedRand)
 	// seedH := seed{true, false, true, false, true, true, true, false, true, false, false, true, false, true, false, true, false, true, false, true, false, true, false, true}
 	// seedV := seed{true, false, true, false, true, false, true, true, false, true, false, true, false, false, false, true, false, true, false, true, false, true, false, true}
-	// seedH := seed{true, false, false}
-	// seedV := seed{true, false, true, false, false}
-	// seedRand := time.Now().UnixNano()
-	seedRand := int64(1643704326655293300)
+	// seedH := seed{true, true, false, false}
+	// seedV := seed{true, true, false, false}
 
-	fmt.Println(seedRand)
-	seedH := randSeed(seedRand, 100, .25)
+	seedH := randSeed(seedRand, 100, .5)
 	seedV := randSeed(seedRand, 100, .5)
-	img := makeImage(seedH, seedV, 25, 25)
+	img := makeImage(seedH, seedV, stitchLength, width, height)
 
 	out, err := os.Create("stitch.png")
 	if err != nil {
@@ -48,8 +73,7 @@ func randSeed(randSeed int64, size int, oddsTrue float32) seed {
 }
 
 // Create the image from given seeds and size.
-func makeImage(seedHor seed, seedVer seed, width int, height int) *image.Alpha {
-	stitchLen := 5
+func makeImage(seedHor seed, seedVer seed, stitchLen int, width int, height int) *image.Alpha {
 
 	seedCols := normSeed(seedVer, width)
 	seedRows := normSeed(seedHor, height)
