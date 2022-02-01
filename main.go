@@ -17,11 +17,12 @@ func main() {
 	// seedH := seed{true, false, false}
 	// seedV := seed{true, false, true, false, false}
 	// seedRand := time.Now().UnixNano()
-	seedRand := int64(10)
+	seedRand := int64(1643704326655293300)
+
 	fmt.Println(seedRand)
-	seedH := randSeed(seedRand, 100, .1)
+	seedH := randSeed(seedRand, 100, .25)
 	seedV := randSeed(seedRand, 100, .5)
-	img := makeImage(seedH, seedV, 100, 100)
+	img := makeImage(seedH, seedV, 25, 25)
 
 	out, err := os.Create("stitch.png")
 	if err != nil {
@@ -49,6 +50,7 @@ func randSeed(randSeed int64, size int, oddsTrue float32) seed {
 // Create the image from given seeds and size.
 func makeImage(seedHor seed, seedVer seed, width int, height int) *image.Alpha {
 	stitchLen := 5
+
 	seedCols := normSeed(seedVer, width)
 	seedRows := normSeed(seedHor, height)
 
@@ -67,15 +69,15 @@ func addRow(img *image.Alpha, stitchLen int, row int, rowSeed bool) {
 	if rowSeed {
 		for i := 0; i < img.Rect.Max.X; i++ {
 			if i/stitchLen%2 == 0 {
-				img.SetAlpha(i, row*5, color.Alpha{255})
-				img.SetAlpha(i+1, row*5, color.Alpha{255})
+				img.SetAlpha(i, row*stitchLen, color.Alpha{255})
+				img.SetAlpha(i+1, row*stitchLen, color.Alpha{255})
 			}
 		}
 	} else {
 		for i := 0; i < img.Rect.Max.X; i++ {
 			if i/stitchLen%2 == 1 {
-				img.SetAlpha(i, row*5, color.Alpha{255})
-				img.SetAlpha(i+1, row*5, color.Alpha{255})
+				img.SetAlpha(i, row*stitchLen, color.Alpha{255})
+				img.SetAlpha(i+1, row*stitchLen, color.Alpha{255})
 			}
 		}
 	}
@@ -86,15 +88,15 @@ func addCol(img *image.Alpha, stitchLen int, col int, colSeed bool) {
 	if colSeed {
 		for i := 0; i < img.Rect.Max.Y; i++ {
 			if i/stitchLen%2 == 0 {
-				img.SetAlpha(col*5, i, color.Alpha{255})
-				img.SetAlpha(col*5, i+1, color.Alpha{255})
+				img.SetAlpha(col*stitchLen, i, color.Alpha{255})
+				img.SetAlpha(col*stitchLen, i+1, color.Alpha{255})
 			}
 		}
 	} else {
 		for i := 0; i < img.Rect.Max.Y; i++ {
 			if i/stitchLen%2 == 1 {
-				img.SetAlpha(col*5, i, color.Alpha{255})
-				img.SetAlpha(col*5, i+1, color.Alpha{255})
+				img.SetAlpha(col*stitchLen, i, color.Alpha{255})
+				img.SetAlpha(col*stitchLen, i+1, color.Alpha{255})
 			}
 		}
 	}
